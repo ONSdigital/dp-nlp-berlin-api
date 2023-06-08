@@ -1,0 +1,11 @@
+FROM python:3.10
+
+RUN mkdir data
+COPY data data/
+
+COPY dist/dp_nlp_berlin_api-0.1.0-py3-none-any.whl .
+
+RUN pip install dp_nlp_berlin_api-0.1.0-py3-none-any.whl
+
+CMD ["python", "-m", "app.main"]
+

@@ -1,10 +1,23 @@
+# Environmental files
 .env
+*.example
+
+# Caches
+__pycache__
+.pytest_cache
+
+# MAC
 .idea
 .DS_Store
+
+# Configs
+config.ini
+
+# Generated files
+/dist
+
+# Others
 flamegraph.svg
 target/
-__pycache__
 .coverage
-.application-version
-/htmlcov
-.pytest_cache
+run_lint.sh

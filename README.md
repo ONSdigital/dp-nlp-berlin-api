@@ -7,6 +7,18 @@ ISO-3166-2 subdivisions.
 
 It is recommended that you use [Pyenv](https://github.com/pyenv/pyenv) to manage your Python installations.
 
+### Configuration
+
+| Environment variable         | Default               | Description
+| ---------------------------- | ---------             | -----------
+| FLASK_APP                    | `app/main.py`         | The data files with the areas      
+| BERLIN_API_PORT              |  28900                | The port to bind to
+| BERLIN_API_HOST              | `0.0.0.0`             | The host to bind to
+| BERLIN_API_DATA_LOCATION     | "data/"               | Data location
+| BERLIN_API_LOGGING_NAMESPACE | "dp_nlp_berlin_api"   | Logging namespace
+| BERLIN_API_GIT_COMMIT        | "000000"              | Git commit 
+| BERLIN_API_VERSION           | "0.1.0"               | version
+
 ### Install Poetry
 ```
 curl -sSL https://install.python-poetry.org | python3 - 
@@ -37,18 +49,19 @@ To test the apps functionality:
 make run
 ```
 
-Then, in another terminal window/tab, navigate to a checked out copy of eq-survey-runner:
+Then, in another terminal window/tab, navigate to a checked out copy of ONS/eq-survey-runner:
+
 ```
 make test
 ```
 
 ## Usage
 
-This will make an API available on port 5001. It serves simple requests of the
+This will make an API available on port 28900. It serves simple requests of the
 form:
 
 ```shell
-curl 'http://localhost:5001/berlin/search?q=house+prices+in+londo&state=gb' | jq
+curl 'http://localhost:28900/v1/berlin/search?q=house+prices+in+londo&state=gb' | jq
 ```
 
 replacing `localhost` with the local endpoint (`jq` used for formatting).
@@ -57,55 +70,24 @@ This will return results of the form:
 
 ```json
 {
-  "time": "32.46ms",
-  "query": {
-    "raw": "house prices in londo",
-    "normalized": "house prices in londo",
-    "stop_words": [
-      "in"
-    ],
-    "codes": [],
-    "exact_matches": [
-      "house"
-    ],
-    "not_exact_matches": [
-      "house prices",
-      "prices in",
-      "prices",
-      "in londo",
-      "londo"
-    ],
-    "state_filter": "gb",
-    "limit": 1,
-    "levenshtein_distance": 2
-  },
-  "results": [
+  "matches": [
     {
-      "loc": {
-        "encoding": "UN-LOCODE",
-        "id": "gb:lon",
-        "key": "UN-LOCODE-gb:lon",
-        "names": [
-          "london"
-        ],
-        "codes": [
-          "lon"
-        ],
-        "state": [
-          "gb",
-          "united kingdom of great britain and northern ireland"
-        ],
-        "subdiv": [
-          "lnd",
-          "london, city of"
-        ]
-      },
-      "score": 1346,
-      "offset": {
-        "start": 16,
-        "end": 21
-      }
+      "encoding": "UN-LOCODE",
+      "id": "ca:lod",
+      "key": "UN-LOCODE-ca:lod",
+      "words": [
+        "london"
+      ]
+    },
+    {
+      "encoding": "UN-LOCODE",
+      "id": "us:ldn",
+      "key": "UN-LOCODE-us:ldn",
+      "words": [
+        "london"
+      ]
     }
+    ...
   ]
 }
 ```

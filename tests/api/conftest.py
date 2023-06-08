@@ -1,8 +1,9 @@
-from dataclasses import dataclass
 import json
+from dataclasses import dataclass
 from unittest.mock import patch
 
 import pytest
+
 
 def load_test_code_list():
     return [{

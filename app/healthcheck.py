@@ -1,65 +1,48 @@
-# import subprocess
+from app.config import START_TIME, GIT_COMMIT, VERSION
 import sys
 import time
 from datetime import datetime
-
-# import os
 
 # Define the check statuses
 OK = "OK"
 WARNING = "WARNING"
 ERROR = "ERROR"
-# commit_sha = os.environ['COMMIT_SHA']
 
 
 class Healthcheck:
-    def __init__(self, status, version, checks):
-        start_time = datetime.utcnow().isoformat()
-        uptime = time.time()
+    def __init__(self, status, checks):
+        formatted_start_time = datetime.fromtimestamp(int(START_TIME))
+
+        build_time = datetime.now()
+
+        self.start_time = formatted_start_time.strftime('%Y-%m-%dT%H:%M:%S%z')
 
         self.status = status
         self.version = {
-            "version": version,
-            # "git_commit": commit_sha,
+            "version": VERSION,
+            "build_time": build_time,
+            "git_commit": GIT_COMMIT,
             "language": "python",
             "language_version": sys.version,
         }
-        self.uptime = uptime
-        self.start_time = start_time
         self.checks = checks
 
     def to_json(self):
         response = {
             "status": self.status,
             "version": self.version,
-            "uptime": self.get_uptime(self.uptime),
+            "uptime": self.get_uptime(),
             "start_time": self.start_time,
             "checks": self.checks,
         }
 
         return response
 
-    # def get_last_commit(self):
-    #     last_commit = subprocess.check_output(['git', 'rev-parse', 'HEAD']).decode('utf-8').strip()
-    #     return last_commit
-
-    def get_uptime(self, start_time):
+    def get_uptime(self):
         uptime = time.time()
-        intervals = (
-            ("w", 604800000),
-            ("d", 86400000),
-            ("h", 3600000),
-            ("m", 60000),
-            ("s", 1000),
-            ("ms", 1),
-        )
-        uptime = round((uptime - start_time) * 1000)
+        start_time = datetime.fromisoformat(self.start_time)
+        start_time_unix = int(start_time.timestamp())
 
-        parts = []
-        for name, count in intervals:
-            value = int(uptime // count)
-            if value:
-                uptime -= value * count
-                parts.append(f"{value} {name}")
+        uptime = round((uptime - start_time_unix) * 1000)
 
-        return ", ".join(parts)
+        return uptime
