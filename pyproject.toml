@@ -22,7 +22,8 @@ dependencies = [
     "gunicorn",
     "structlog>=21.5.0,<21.6",
     "python-dateutil>=2.8.2,<2.9",
-    "berlin>=0.3.12,<4",
+    "levenshtein>=0.25.0",
+    "berlin>=0.3.13,<4",
 ]
 
 [project.optional-dependencies]
@@ -62,7 +63,7 @@ Flask = "^2.0.2"
 structlog = "^23.3.0"
 python-dateutil = "^2.8.2"
 requests = "^2.30.0"
-berlin = ">=0.3.12,<0.4"
+berlin = "0.3.13"
 ruff = "^0.0.265"
 safety = "^2.3.5"
 dynaconf = "^3.1.12"
@@ -70,6 +71,7 @@ pip = "^23.1.2"
 gunicorn = "^21.2.0"
 json-log-formatter = "^0.5.2"
 Jinja2 = ">=3.1.3"
+levenshtein = "^0.25.0"
 
 [tool.poetry.dev-dependencies]
 Jinja2 = ">=3.1.3"

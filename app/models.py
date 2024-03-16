@@ -22,7 +22,7 @@ class MatchModel:
                 errors=format_errors(e, trace=traceback.format_exc()),
             )
 
-    def to_json(self):
+    def to_json(self) -> dict:
         return asdict(self)
 
 
@@ -59,5 +59,5 @@ class LocationModel:
             state=state,
         )
 
-    def to_json(self):
+    def to_json(self) -> dict:
         return asdict(self)
