@@ -41,11 +41,14 @@ class LocationModel:
     def from_location(cls, loc: Location, db):
         state_str: str = loc.get_state_code()
         subdiv_str: Optional[str] = loc.get_subdiv_code()
-        subdiv: Optional[list[str]]
+        subdiv: Optional[list[str]] = None
+
         if subdiv_str:
-            subdiv = [subdiv_str, db.get_subdiv_key(state_str, subdiv_str)]
-        else:
-            subdiv = None
+            try:
+                subdiv = [subdiv_str, db.get_subdiv_key(state_str, subdiv_str)]
+            except KeyError:
+                subdiv = None
+
         state: list[str] = [state_str, db.get_state_key(state_str)]
 
         return cls(
