@@ -20,7 +20,7 @@ export BERLIN_API_BUILD_TIME=$(shell date +%s)
 all: audit lint fmt
 
 audit: deps ## audits code for vulnerable dependencies
-	poetry run safety check -i 51457 
+	poetry run safety check
 
 build: ## Builds a docker image berlin_api
 	docker build --build-arg build_time="${BERLIN_API_BUILD_TIME}" --build-arg commit="${BERLIN_API_GIT_COMMIT}" --build-arg version="${BERLIN_API_VERSION}" -t berlin_api .
