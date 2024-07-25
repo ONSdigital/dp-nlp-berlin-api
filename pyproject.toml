@@ -67,7 +67,7 @@ ruff = "^0.0.265"
 safety = "^3.2.0"
 dynaconf = "^3.1.12"
 pip = "^23.1.2"
-gunicorn = "^21.2.0"
+gunicorn = "^22.0.0"
 json-log-formatter = "^0.5.2"
 Jinja2 = ">=3.1.3"
 
