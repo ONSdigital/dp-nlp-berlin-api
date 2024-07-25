@@ -8,15 +8,35 @@ import structlog._log_levels
 from app.settings import settings
 from gunicorn_config import format_stack_trace
 
+severity_info = 3
+severity_warning = 2
+severity_error = 1
+severity_fatal = 0
+
+
+def level_to_severity(level):
+    level_int = logging.getLevelName(level.upper())
+    match level_int:
+        case logging.INFO:
+            return severity_info
+        case logging.WARNING:
+            return severity_warning
+        case logging.ERROR:
+            return severity_error
+        case logging.FATAL:
+            return severity_fatal
+        case _:
+            return severity_info
+
 
 def add_severity_level(logger, method_name, event_dict):
-    if method_name == "info":
-        event_dict[0][0]["severity"] = 3
-    elif method_name == "error":
-        event_dict[0][0]["severity"] = 1
-
+    event_dict[0][0]["severity"] = level_to_severity(event_dict[0][0]["level"])
+    del event_dict[0][0]["level"]
     return event_dict
 
+def remove_microseconds(logger, method_name, event_dict):
+    event_dict[0][0]["created_at"] = event_dict[0][0]["created_at"][:-3] + "Z"
+    return event_dict
 
 def format_errors(*excs: BaseException, trace=None):
     errors = []
@@ -36,9 +56,12 @@ def format_errors(*excs: BaseException, trace=None):
 def setup_logging():
     shared_processors = []
     processors = shared_processors + [
+        structlog.processors.TimeStamper(fmt="%Y-%m-%dT%H:%M:%S.%f", utc=False, key="created_at"),
+        structlog.stdlib.add_log_level,
         structlog.stdlib.PositionalArgumentsFormatter(),
         structlog.stdlib.ProcessorFormatter.wrap_for_formatter,
         add_severity_level,
+        remove_microseconds,
     ]
     structlog.configure(
         cache_logger_on_first_use=True,
@@ -63,11 +86,10 @@ def setup_logging():
                 "level": "DEBUG",
                 "formatter": "json",
                 "class": "logging.StreamHandler",
-                "stream": "ext://sys.stderr",
             },
         },
         "loggers": {
-            "": {
+            "app": {
                 "handlers": ["stream"],
                 "level": "DEBUG",
                 "propagate": True,
@@ -78,7 +100,6 @@ def setup_logging():
 
     return structlog.get_logger(
         namespace=settings.NAMESPACE,
-        created_at=datetime.utcnow().isoformat(timespec="milliseconds") + "Z",
         event="",
         severity=3,  # default
     )
