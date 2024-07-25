@@ -34,6 +34,16 @@ def berlin_search():
     state = request.args.get("state") or "gb"
     limit = request.args.get("limit", type=int) or 10
     lev_distance = request.args.get("lev_distance", type=int) or 2
+
+    if not q:
+        logger.info(
+            event="no query provided",
+        )
+        return (
+            jsonify({"error": "q is a required parameter"}),
+            400,
+        )
+
     try:
         query = ""
         longerQuery = False

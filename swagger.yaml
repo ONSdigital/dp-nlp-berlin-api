@@ -109,6 +109,8 @@ paths:
                   key:	"UN-LOCODE-us:ldn"
                   words:	
                     -	"london"
+        400:
+          $ref: '#/responses/ClientError'
         500:
           $ref: '#/responses/InternalError'
 
@@ -133,6 +135,8 @@ paths:
 responses:
   NotFound:
     description: "Resource not found"
+  ClientError:
+    description: "Failed to process the request due to an client error"
   InternalError:
     description: "Failed to process the request due to an internal error"
 
