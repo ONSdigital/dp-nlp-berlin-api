@@ -15,12 +15,15 @@ export BERLIN_API_GIT_COMMIT=$(shell git rev-parse HEAD)
 export BERLIN_API_VERSION ?= 0.1.0
 export BERLIN_API_BUILD_TIME=$(shell date +%s)
 
-.PHONY: all audit build build-bin deps help lint debug debug-container test test-component test-unit fmt
+.PHONY: all audit audit-fix build build-bin deps help lint debug debug-container test test-component test-unit fmt
 
 all: audit lint fmt
 
 audit: deps ## audits code for vulnerable dependencies
-	poetry run safety check
+	poetry run pip-audit .
+
+audit-fix: deps ## audits code for vulnerable dependencies
+	poetry run pip-audit . --fix
 
 build: ## Builds a docker image berlin_api
 	docker build --build-arg build_time="${BERLIN_API_BUILD_TIME}" --build-arg commit="${BERLIN_API_GIT_COMMIT}" --build-arg version="${BERLIN_API_VERSION}" -t berlin_api .
