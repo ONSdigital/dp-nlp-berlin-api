@@ -31,27 +31,12 @@ poetry install
 To run the app:
 
 ```sh
-make run
+make debug
 ```
 
 ## Testing
 
-By default, all schemas in the `tests/schemas/valid` directory will be evaluated as part of the unit tests.
-Any errors in these schemas will cause a failure.
-
 To run the app's unit tests:
-
-```sh
-make test
-```
-
-To test the apps functionality:
-
-```sh
-make run
-```
-
-Then, in another terminal window/tab, navigate to a checked out copy of ONS/eq-survey-runner:
 
 ```sh
 make test

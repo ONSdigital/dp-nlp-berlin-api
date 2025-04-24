@@ -15,7 +15,7 @@ export BERLIN_API_GIT_COMMIT=$(shell git rev-parse HEAD)
 export BERLIN_API_VERSION ?= 0.1.0
 export BERLIN_API_BUILD_TIME=$(shell date +%s)
 
-.PHONY: all audit build build-bin deps help lint run test test-component test-unit fmt
+.PHONY: all audit build build-bin deps help lint debug debug-container test test-component test-unit fmt
 
 all: audit lint fmt
 
@@ -38,10 +38,10 @@ fmt: ## Formats your code automatically.
 lint: deps ## Lints code 
 	poetry run ruff .
 
-run: deps ## Start the api locally on port 28900.
+debug: deps ## Start the api locally on port 28900.
 	@FLASK_APP=${FLASK_APP} poetry run gunicorn "app.main:create_app()" -b 0.0.0.0:${BERLIN_API_PORT} -c gunicorn_config.py
 
-run-container: build ## Runs a container from the pre-build image 
+debug-container: build ## Runs a container from the pre-build image 
 	docker run -p 28900:28900 --env BERLIN_API_BUILD_TIME='${BERLIN_API_BUILD_TIME}' -e BERLIN_API_BUILD_TIME="${BERLIN_API_BUILD_TIME}" -e BERLIN_API_VERSION="${BERLIN_API_VERSION}" -ti berlin_api
 
 test: deps ## runs all tests
